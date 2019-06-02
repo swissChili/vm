@@ -38,15 +38,31 @@ static int fact[] = {
 
 static int fact_size = sizeof(fact) / sizeof(fact[0]);
 
+static int maths[] = {
+    PSH, 1232,
+    PSH, 2,
+    DIV,
+    POP, EAX,
+    PSH, 432432,
+    LDR, EAX,
+    MLT,
+};
+
+static int maths_size = sizeof(maths) / sizeof(maths[0]);
+
 int main()
 {
+    FILE *out = fopen("maths", "w");
+    fwrite((void *) &maths, sizeof(int), maths_size, out);
+    fclose(out);
+
     stack *s = new_stack();
     registers r = { 0 };
 
     // Argument:
     stack_push(s, 5);
 
-    execute(fact, fact_size, s, r);
+    execute(maths, maths_size, s, r);
     printf(C_CYAN "Result: %d\n" C_CYAN, stack_pop(s));
 
     free_stack(s);
