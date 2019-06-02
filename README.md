@@ -1,8 +1,7 @@
 # vm
 
-this project contains a simple stack-oriented virtual machine implemented in c. it contains
-few instructions but can be used to write mildly interesting programs. `main.c` contains an
-example of a factorial program. it does not currently work.
+this project contains a simple stack-based virtual machine. the instruction set is available
+[on the wiki](https://github.com/swissChili/vm/wiki/Instructions).
 
 
 ## building
