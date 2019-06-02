@@ -73,6 +73,14 @@ void execute(int data[], int length, stack *s, registers r)
                 i += offset - 1;
 
                 break;
+            } case JPS:
+            {
+                printf(C_BLUE "JPS\n" C_RESET);
+                int offset = stack_pop(s);
+
+                i += offset - 1;
+
+                break;
             } case CMP:
             {
                 int a = stack_pop(s);

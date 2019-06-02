@@ -63,7 +63,7 @@ int main()
     stack_push(s, 5);
 
     execute(maths, maths_size, s, r);
-    printf(C_CYAN "Result: %d\n" C_CYAN, stack_pop(s));
+    printf(C_CYAN "Result: %d\n" C_RESET, stack_pop(s));
 
     free_stack(s);
 }

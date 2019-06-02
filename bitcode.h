@@ -15,6 +15,7 @@ enum instruction
     MLT,
     DIV,
     JMP,
+    JPS,
     CMP,
     JEQ,
     JNE,
