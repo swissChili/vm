@@ -5,7 +5,7 @@
 #include "registers.h"
 #include "colors.h"
 
-void execute(int data[], int length, stack *s, registers r)
+void execute(int data[], int length, stack *s, stack *callstack, registers r)
 {
     for (int i = 0; i < length; ++i)
     {
@@ -166,6 +166,20 @@ void execute(int data[], int length, stack *s, registers r)
             } case RET:
             {
                 printf(C_BLUE "RET\n" C_RESET);
+                i = stack_pop(callstack);
+                break;
+            } case CAL:
+            {
+                int offset = data[++i];
+                printf(C_BLUE "CAL" C_RESET " %d\n", offset);
+
+                stack_push(callstack, i);
+
+                i += offset - 1;
+                break;
+            } case END:
+            {
+                printf(C_BLUE "END\n" C_RESET);
                 return;
             }
         }

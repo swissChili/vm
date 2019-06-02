@@ -50,6 +50,17 @@ static int maths[] = {
 
 static int maths_size = sizeof(maths) / sizeof(maths[0]);
 
+static int call[] = {
+    CAL, 3,
+    ADD,
+    END,
+    PSH, 12,
+    PSH, 2,
+    RET,
+};
+
+static int call_size = sizeof(call) / sizeof(call[0]);
+
 int main()
 {
     FILE *out = fopen("maths", "w");
@@ -57,13 +68,15 @@ int main()
     fclose(out);
 
     stack *s = new_stack();
+    stack *callstack = new_stack();
     registers r = { 0 };
 
     // Argument:
-    stack_push(s, 5);
+    //stack_push(s, 5);
 
-    execute(maths, maths_size, s, r);
+    execute(call, call_size, s, callstack, r);
     printf(C_CYAN "Result: %d\n" C_RESET, stack_pop(s));
 
     free_stack(s);
+    free_stack(callstack);
 }

@@ -26,9 +26,11 @@ enum instruction
     SWP,
     RET,
     DUP,
+    CAL,
+    END,
 };
 
-void execute(int[], int, stack *, registers);
+void execute(int[], int, stack *, stack *, registers);
 
 
 #endif
