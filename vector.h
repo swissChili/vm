@@ -3,6 +3,7 @@
 
 #define VEC_ALLOC_SIZE 256
 
+
 struct vector
 {
     int length;

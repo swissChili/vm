@@ -31,7 +31,7 @@ int vector_at(vector *v, int i, int *ret)
 
 int vector_set(vector *v, int i, int val)
 {
-    if (i < 0, i > v->length)
+    if (i < 0 || i > v->length)
         return 0;
     else
     {

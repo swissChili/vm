@@ -4,6 +4,7 @@
 #include "colors.h"
 #include "bitcode.h"
 #include "registers.h"
+#include "asm.h"
 
 static int fact[] = {
     /*
@@ -59,12 +60,13 @@ static int call[] = {
     RET,
 };
 
-static int call_size = sizeof(call) / sizeof(call[0]);
+//static int call_size = sizeof(call) / sizeof(call[0]);
 
-int main()
+/*
+void test()
 {
-    FILE *out = fopen("maths", "w");
-    fwrite((void *) &maths, sizeof(int), maths_size, out);
+    FILE *out = fopen("call", "wb");
+    fwrite((void *) &call, sizeof(int), call_size, out);
     fclose(out);
 
     stack *s = new_stack();
@@ -72,10 +74,29 @@ int main()
     registers r = { 0 };
 
     // Argument:
-    //stack_push(s, 5);
+    // stack_push(s, 5);
 
     execute(call, call_size, s, callstack, r);
     printf(C_CYAN "Result: %d\n" C_RESET, stack_pop(s));
+
+    free_stack(s);
+    free_stack(callstack);
+} */
+
+static stack *s;
+static stack *callstack;
+
+int fn(int *arr, int count)
+{
+    return 0;
+}
+
+int main()
+{
+    s = new_stack();
+    callstack = new_stack();
+
+    repl(fn);
 
     free_stack(s);
     free_stack(callstack);
