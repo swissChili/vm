@@ -30,7 +30,9 @@ enum instruction
     END,
 };
 
-void execute(int[], int, stack *, stack *, registers);
+#define ifdb(a) if (debug) a
+
+void execute(int[], int, stack *, stack *, registers, int);
 
 
 #endif

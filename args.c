@@ -7,7 +7,7 @@
 #include "colors.h"
 
 
-void *parse_arg(int argc, char **argv, int t, char *name)
+void *parse_arg(int argc, char **argv, int t, char *name, char shortname)
 {
     int type = PROGRAM;
     int arg_bool = 0;
@@ -33,10 +33,16 @@ void *parse_arg(int argc, char **argv, int t, char *name)
                     else
                     {
                         int len = strlen(argv[i]);
+                        if (len == 2 && argv[i][1] == shortname && t == ARG_STRING)
+                        {
+                            type = FLAG;
+                            strcpy(last, name);
+                            break;
+                        }
                         // skip the - so j == 1
                         for (int j = 1; j < len; j++)
                         {
-                            if (argv[i][j] == name[0])
+                            if (argv[i][j] == shortname)
                             {
                                 arg_bool = 1;
                                 done = 1;
