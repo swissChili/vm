@@ -12,3 +12,11 @@ $ cd build
 $ ninja
 $ ./vm
 ```
+
+
+## usage
+
+```
+# execute a text assembly file:
+$ vm -a --file foo.s
+```
