@@ -45,3 +45,8 @@ EAX: 123 EBX: 0 ECX: 0 EDX: 0
 [ 123 ]
 Returned 123
 ```
+
+## known issues
+
+- parser uses scanf and is really finicky. It will not accept leading or trailing whitespace.
+- `DUP` instruction does not parse for some bizarre reason.

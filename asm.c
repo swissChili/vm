@@ -1,23 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "asm.h"
 #include "colors.h"
 #include "bitcode.h"
-#include <stdlib.h>
 
 
 vector *assemble_file(const char *file)
 {
     vector *vec = new_vector();
-
     FILE *fp = fopen(file, "r");
-
-
     char line[256];
 
     while (fgets(line, sizeof(line), fp))
     {
         int post_int = 0;
         char post_char = 0;
+
         if (sscanf(line, "PSH %d", &post_int))
         {
             vector_push(vec, PSH);
@@ -134,6 +132,10 @@ vector *assemble_file(const char *file)
         else if (sscanf(line, "END"))
         {
             vector_push(vec, END);
+        }
+        else if (sscanf(line, ";"))
+        {
+            /* nothing */
         }
         else
         {
