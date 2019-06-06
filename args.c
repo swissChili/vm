@@ -33,7 +33,7 @@ void *parse_arg(int argc, char **argv, int t, char *name, char shortname)
                     else
                     {
                         int len = strlen(argv[i]);
-                        if (len == 2 && argv[i][1] == shortname && t == ARG_STRING)
+                        if (argv[i][len - 1] == shortname && t == ARG_STRING)
                         {
                             type = FLAG;
                             strcpy(last, name);
