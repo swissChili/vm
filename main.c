@@ -1,103 +1,32 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "stack.h"
 #include "colors.h"
 #include "bitcode.h"
 #include "registers.h"
 #include "asm.h"
+#include "args.h"
 
-static int fact[] = {
-    /*
-     * EAX: initial value
-     * EBX: iteration count
-     * ECX: accumulator
-     * 
-     * pseudocode:
-     * while starting val > iteration count
-     *     accumulator *= iteration count
-     */
-    POP, EAX, // set up init val
-    PSH, 1,
-    POP, EBX, // set up iter count
-    PSH, 1,
-    POP, ECX, // set up acc
 
-    LDR, EAX, // load value into stack
-    LDR, EBX, // load iters into stack
-    CMP,      // compare them
-    JGT, 4,   // jump ahead as long as EAX > EBX
-    LDR, ECX, // push acc to stack
-    RET,      // EAX <= EBX, Return accumulator
-    LDR, ECX, // load accumulator
-    MLT,      // ECX * EBX
-    POP, ECX, // save acc
-    LDR, EBX, // load iter count
-    INC,      // increment iter count
-    POP, EBX, // store in EBX
-    JMP, -21, // jump to start
-};
-
-static int fact_size = sizeof(fact) / sizeof(fact[0]);
-
-static int maths[] = {
-    PSH, 1232,
-    PSH, 2,
-    DIV,
-    POP, EAX,
-    PSH, 432432,
-    LDR, EAX,
-    MLT,
-};
-
-static int maths_size = sizeof(maths) / sizeof(maths[0]);
-
-static int call[] = {
-    CAL, 3,
-    ADD,
-    END,
-    PSH, 12,
-    PSH, 2,
-    RET,
-};
-
-//static int call_size = sizeof(call) / sizeof(call[0]);
-
-/*
-void test()
+int main(int argc, char **argv)
 {
-    FILE *out = fopen("call", "wb");
-    fwrite((void *) &call, sizeof(int), call_size, out);
-    fclose(out);
+    int assemble = PARSE_BOOL(argc, argv, "assemble");
+    char *file = PARSE_STR(argc, argv, "file");
 
-    stack *s = new_stack();
-    stack *callstack = new_stack();
-    registers r = { 0 };
+    if (assemble && strlen(file) > 0)
+    {
+        stack *s = new_stack();
+        stack *callstack = new_stack();
+        registers r = { 0 };
 
-    // Argument:
-    // stack_push(s, 5);
+        vector *v = assemble_file(file);
 
-    execute(call, call_size, s, callstack, r);
-    printf(C_CYAN "Result: %d\n" C_RESET, stack_pop(s));
+        execute(v->items, v->length, s, callstack, r);
 
-    free_stack(s);
-    free_stack(callstack);
-} */
+        printf("Returned %d\n", stack_pop(s));
 
-static stack *s;
-static stack *callstack;
-
-int fn(int *arr, int count)
-{
-    return 0;
-}
-
-int main()
-{
-    s = new_stack();
-    callstack = new_stack();
-
-    repl(fn);
-
-    free_stack(s);
-    free_stack(callstack);
+        free_stack(s);
+        free_stack(callstack);
+    }
 }
