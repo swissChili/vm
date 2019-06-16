@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "stack.h"
 #include "colors.h"
@@ -25,11 +26,11 @@ int main(int argc, char **argv)
             critical("no output file provided. use --output <file> or -o <file>");
         status("Assembling", to_compile);
         vector *v = assemble_file(to_compile);
-        status("Writing", outfile);
+        status("Saving", outfile);
         
         FILE *fp = fopen(outfile, "wb");
-        fwrite(v->items, sizeof(v), 1, fp);
-        statusi("Written", sizeof(v));
+        fwrite(v->items, sizeof(int32_t) * v->length, 1, fp);
+        statusi("Bytes", sizeof(int32_t) * v->length);
     }
     else if (strlen(to_exec) > 0)
     {
@@ -41,7 +42,7 @@ int main(int argc, char **argv)
         unsigned long len = ftell(fp);
         fseek(fp, 0, SEEK_SET);
 
-        int *buf = malloc(len);
+        int32_t *buf = malloc(len);
 
         fread(buf, len, 1, fp);
         fclose(fp);
@@ -50,7 +51,7 @@ int main(int argc, char **argv)
         stack *callstack = new_stack();
         registers r = { 0 };
 
-        execute(buf, len / sizeof(int), s, callstack, r, debug);
+        execute(buf, len / sizeof(int32_t), s, callstack, r, debug);
 
         statusi("Returned", stack_pop(s));
 

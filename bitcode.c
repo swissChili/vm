@@ -1,13 +1,14 @@
 #include <stdio.h>
+#include <stdint.h>
 
 #include "bitcode.h"
 #include "stack.h"
 #include "registers.h"
 #include "colors.h"
 
-void execute(int data[], int length, stack *s, stack *callstack, registers r, int debug)
+void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, registers r, int debug)
 {
-    for (int i = 0; i < length; ++i)
+    for (uint64_t i = 0; i < length; ++i)
     {
         ifdb(printf(C_GREEN "____________________________\n" C_RESET));
         switch (data[i])

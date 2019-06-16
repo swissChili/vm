@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdint.h>
 #include "vector.h"
 
 
@@ -7,7 +8,7 @@ vector *new_vector()
     vector *new = (vector *)malloc(sizeof(vector));
     new->length = 0;
     new->size = 128;
-    new->items = (int *)malloc(VEC_ALLOC_SIZE * sizeof(int));
+    new->items = malloc(VEC_ALLOC_SIZE * sizeof(int));
 
     return new;
 }
@@ -18,7 +19,7 @@ void free_vector(vector *v)
     free(v);
 }
 
-int vector_at(vector *v, int i, int *ret)
+int vector_at(vector *v, uint64_t i, int32_t *ret)
 {
     if (i < 0 || i > v->length)
         return 0;
@@ -29,7 +30,7 @@ int vector_at(vector *v, int i, int *ret)
     }
 }
 
-int vector_set(vector *v, int i, int val)
+int vector_set(vector *v, uint64_t i, int32_t val)
 {
     if (i < 0 || i > v->length)
         return 0;
@@ -40,12 +41,12 @@ int vector_set(vector *v, int i, int val)
     }
 }
 
-void vector_push(vector *v, int val)
+void vector_push(vector *v, int32_t val)
 {
     if (v->length + 1 >= v->size)
     {
         // Reallocate memory
-        v->items = realloc(v->items, (v->size + VEC_ALLOC_SIZE) * sizeof(int));
+        v->items = realloc(v->items, (v->size + VEC_ALLOC_SIZE) * sizeof(int32_t));
     }
     v->items[v->length++] = val;
 }

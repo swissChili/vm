@@ -1,6 +1,7 @@
 #ifndef VM_BITCODE_H
 #define VM_BITCODE_H
 
+#include <stdint.h>
 #include "stack.h"
 #include "registers.h"
 
@@ -32,7 +33,7 @@ enum instruction
 
 #define ifdb(a) if (debug) a
 
-void execute(int[], int, stack *, stack *, registers, int);
+void execute(int32_t[], uint64_t, stack *, stack *, registers, int);
 
 
 #endif

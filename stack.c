@@ -5,7 +5,7 @@
 #include "stack.h"
 
 
-node *new_node(int value) {
+node *new_node(int32_t value) {
     node *ret = (node *) malloc(sizeof(node));
     ret->value = value;
     ret->prev = NULL;
@@ -35,7 +35,7 @@ void free_stack(stack *s)
         return;
     }
     node *current = s->first;
-    for (int i = 0; i < s->length; i++)
+    for (uint64_t i = 0; i < s->length; i++)
     {
         node *next = current->next;
         free_node(current);
@@ -57,11 +57,11 @@ void stack_push(stack *s, int value)
     s->last = new;
 }
 
-int stack_pop(stack *s)
+int32_t stack_pop(stack *s)
 {
     if (s->length == 0)
         return 0;
-    int last = s->last->value;
+    int32_t last = s->last->value;
     node *new_last = s->last->prev;
     free_node(s->last);
     s->length--;
@@ -77,7 +77,7 @@ void stack_print(stack *s)
     {
         printf("[");
         node *current = s->first;
-        for (int i = 0; i < s->length; ++i)
+        for (uint64_t i = 0; i < s->length; ++i)
         {
             printf(" %d", current->value);
             current = current->next;

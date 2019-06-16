@@ -147,8 +147,3 @@ vector *assemble_file(const char *file)
     }
     return vec;
 }
-
-void repl(handler h)
-{
-    // TODO
-}

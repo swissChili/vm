@@ -4,11 +4,7 @@
 #include "vector.h"
 
 
-typedef int (*handler)(int *, int);
-
 vector *assemble_file(const char*);
-
-void repl(handler);
 
 
 #endif
