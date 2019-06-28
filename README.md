@@ -82,7 +82,6 @@ struct foo
 ```hs
 -- foo :: Int -> Int -> Int -> Bool -> Bool -> Bool -> Int
 λ a . λ b . λ c .
-    -- where true = 
     λ a1 . λ b1 . λ c1 .
         a1 a (b1 b (c1 c 0))
 ```
