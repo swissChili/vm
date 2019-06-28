@@ -1,8 +1,8 @@
 .vscode
+.idea
 build
 *.o
 *.a
-*.s
 *.dat
 ~*
 *.so
