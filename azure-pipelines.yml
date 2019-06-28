@@ -11,11 +11,11 @@ pool:
 
 steps:
 - script: |
-    sudo apt install meson ninja-build build-essentials
+    sudo apt install meson ninja-build build-essential
   displayName: 'Install Meson and Ninja'
 
 - script: |
     meson build
     cd build
-    ninja
+    ninja || make
   displayName: 'build the project'
