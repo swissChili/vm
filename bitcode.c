@@ -10,7 +10,7 @@ void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, regist
 {
     for (uint64_t i = 0; i < length; ++i)
     {
-        ifdb(printf(C_GREEN "____________________________\n" C_RESET));
+        ifdb(printf(C_GREEN "____________________________ %ld\n" C_RESET, i));
         switch (data[i])
         {
             case PSH:
@@ -71,7 +71,7 @@ void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, regist
                 int offset = data[++i];
                 ifdb(printf(C_BLUE "JMP" C_RESET " %d\n", offset));
 
-                i += offset - 1;
+                i = offset - 1;
 
                 break;
             } case JPS:
@@ -79,11 +79,12 @@ void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, regist
                 ifdb(printf(C_BLUE "JPS\n" C_RESET));
                 int offset = stack_pop(s);
 
-                i += offset - 1;
+                i = offset - 1;
 
                 break;
             } case CMP:
             {
+                // ... b a
                 int a = stack_pop(s);
                 int b = stack_pop(s);
                 ifdb(printf(C_BLUE "CMP\n" C_RESET));
@@ -109,7 +110,10 @@ void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, regist
                 ifdb(printf(C_BLUE "JGT" C_RESET " %d\n", offset));
 
                 if (r[GT] == 1)
-                    i += offset - 1;
+                {
+                    ifdb(printf(C_BLUE "JUMPING" C_RESET "\n"));
+                    i = offset - 1;
+                }
 
                 break;
             } case JLT:
@@ -118,7 +122,7 @@ void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, regist
                 ifdb(printf(C_BLUE "JLT" C_RESET " %d\n", offset));
 
                 if (r[LT])
-                    i += offset - 1;
+                    i = offset - 1;
 
                 break;
             } case JEQ:
@@ -127,7 +131,7 @@ void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, regist
                 ifdb(printf(C_BLUE "JEQ" C_RESET " %d\n", offset));
 
                 if (r[EQ])
-                    i += offset - 1;
+                    i = offset - 1;
 
                 break;
             } case JNE:
@@ -135,7 +139,7 @@ void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, regist
                 int offset = data[++i];
                 ifdb(printf(C_BLUE "JNE" C_RESET " %d\n", offset));
                 if (!r[EQ])
-                    i += offset - 1;
+                    i = offset - 1;
 
                 break;
             } case DUP:
@@ -176,7 +180,7 @@ void execute(int32_t data[], uint64_t length, stack *s, stack *callstack, regist
 
                 stack_push(callstack, i);
 
-                i += offset - 1;
+                i = offset - 1;
                 break;
             } case END:
             {

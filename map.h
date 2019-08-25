@@ -24,6 +24,7 @@ struct map
     uint64_t len;
     map_node *items;
     uint64_t full;
+    uint64_t count;
 };
 
 typedef struct map map;

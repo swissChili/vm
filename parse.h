@@ -8,5 +8,7 @@ int parse_lit(char[], char[]);
 int parse_int_arg(char[], char[], int *);
 int parse_reg_arg(char[], char[], char[]);
 int parse_label_arg(char[], char[], char[]);
+int parse_single(char[]);
+int parse_double(char[]);
 
 #endif

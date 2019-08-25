@@ -51,7 +51,9 @@ void map_set(map *m, char *k, void *v)
     uint64_t h = hash(k);
     uint32_t i = h % m->len;
 
-    printf("hash %lu i %u\n", h, i);
+    printf("hash %u i %u\n", h, i);
+
+    m->count++;
 
     if (m->full++ < m->len)
     {

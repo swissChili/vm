@@ -1,8 +1,9 @@
 @start
-	PSH	123
-	POP	EAX
-	JMP	@end
-	PSH	234
-	POP	EAX
-@end
-	LDR	EAX
+	PSH 8
+	POP EAX
+	CAL @fact-iter
+	END
+
+@fact-iter
+	PSH 123123
+	RET

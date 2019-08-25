@@ -19,21 +19,23 @@ vector *assemble_file(const char *file)
 
     while (fgets(line, sizeof(line), fp))
     {
-        printf(line);
-        char lbl[256];
+        // printf(line);
+        char lbl[256] = {};
         if (parse_label(line, lbl))
         {
-            MAP_SET(labels, lbl, instruction);
-            printf(C_CYAN "is label '%s' at %d\n" C_RESET, lbl, instruction);
+            MAP_SET(labels, lbl, instruction + labels->count);
         }
-        else if (!parse_skip(line))
+        else if (parse_single(line))
         {
             instruction++;
-            puts(C_GREEN "Instruction++" C_RESET);
+        }
+        else if (parse_double(line))
+        {
+            instruction += 2;
         }
     }
 
-    printf("\n\n\n\n");
+    // printf("\n\n\n\n");
 
     fp = fopen(file, "r");
 
@@ -41,9 +43,9 @@ vector *assemble_file(const char *file)
     {
         int post_int = 0;
         char post_char = 0;
-        char post_str[256];
+        char post_str[256] = {};
 
-        printf("%s", line);
+        // printf("%s", line);
 
         if (parse_int_arg(line, "PSH", &post_int))
         {
@@ -81,7 +83,8 @@ vector *assemble_file(const char *file)
             {
                 vector_push(vec, LDR);
                 vector_push(vec, reg);
-            } else
+            }
+            else
             {
                 fprintf(
                     stderr,
@@ -130,7 +133,7 @@ vector *assemble_file(const char *file)
             vector_push(vec, JEQ);
             vector_push(vec, post_int);
         }
-        else if (sscanf(line, "JEQ @ %s", post_str))
+        else if (parse_label_arg(line, "JEQ", post_str))
         {
             vector_push(vec, JEQ);
             vector_push(vec, MAP_GET(int, labels, post_str));
@@ -149,6 +152,11 @@ vector *assemble_file(const char *file)
         {
             vector_push(vec, JLT);
             vector_push(vec, post_int);
+        }
+        else if (parse_label_arg(line, "JLT", post_str))
+        {
+            vector_push(vec, JLT);
+            vector_push(vec, MAP_GET(int, labels, post_str));
         }
         else if (parse_int_arg(line, "JGT", &post_int))
         {
@@ -188,6 +196,8 @@ vector *assemble_file(const char *file)
         else if (parse_label_arg(line, "CAL", post_str))
         {
             vector_push(vec, CAL);
+            printf("\nCalling %s\n\n", post_str);
+            map_debug(labels);
             vector_push(vec, MAP_GET(int, labels, post_str));
         }
         else if (parse_lit(line, "END"))
