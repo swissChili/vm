@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-uint64_t hash(char *str);
+uint32_t hash(char *str);
 
 
 #endif

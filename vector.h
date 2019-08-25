@@ -2,8 +2,8 @@
 #define VM_VECTOR_H
 
 #include <stdint.h>
-#define VEC_ALLOC_SIZE 256
 
+#define VEC_ALLOC_SIZE 256
 
 struct vector
 {
@@ -14,6 +14,7 @@ struct vector
 
 typedef struct vector vector;
 
+vector *new_vector_sized(uint64_t);
 vector *new_vector();
 void free_vector(vector *);
 // Returns 0 on error, 1 otherwise.

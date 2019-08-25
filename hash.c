@@ -1,8 +1,8 @@
 #include "hash.h"
 
-uint64_t hash(char *str)
+uint32_t hash(char *str)
 {
-    uint64_t hash = 5381;
+    uint32_t hash = 5381;
     char c;
 
     while (c = *str++)
