@@ -45,23 +45,26 @@ vector *assemble_file(const char *file)
 
         printf("%s", line);
 
-        if (sscanf(line, "PSH %d", &post_int))
+        if (parse_int_arg(line, "PSH", &post_int))
         {
             vector_push(vec, PSH);
             vector_push(vec, post_int);
         }
         else if (parse_label(line, post_str))
         {
-            printf("!!skipping\n");
         }
-        else if (sscanf(line, "POP E%cX", &post_char))
+        else if (parse_skip(line))
+        {
+        }
+        else if (parse_reg_arg(line, "POP", &post_char))
         {
             int reg = post_char - 'A';
             if (reg >= EAX && reg <= EDX)
             {
                 vector_push(vec, POP);
                 vector_push(vec, reg);
-            } else
+            }
+            else
             {
                 fprintf(
                     stderr,
@@ -71,7 +74,7 @@ vector *assemble_file(const char *file)
                 exit(1);
             }
         }
-        else if (sscanf(line, "LDR E%cX", &post_char))
+        else if (parse_reg_arg(line, "LDR", &post_char))
         {
             int reg = post_char - 'A';
             if (reg >= EAX && reg <= EDX)
@@ -88,41 +91,41 @@ vector *assemble_file(const char *file)
                 exit(1);
             }
         }
-        else if (sscanf(line, "ADD"))
+        else if (parse_lit(line, "ADD"))
         {
             vector_push(vec, ADD);
         }
-        else if (sscanf(line, "SUB"))
+        else if (parse_lit(line, "SUB"))
         {
             vector_push(vec, SUB);
         }
-        else if (sscanf(line, "MLT"))
+        else if (parse_lit(line, "MLT"))
         {
             vector_push(vec, MLT);
         }
-        else if (sscanf(line, "DIV"))
+        else if (parse_lit(line, "DIV"))
         {
             vector_push(vec, DIV);
         }
-        else if (sscanf(line, "JMP %d", &post_int))
+        else if (parse_int_arg(line, "JMP", &post_int))
         {
             vector_push(vec, JMP);
             vector_push(vec, post_int);
         }
-        else if (sscanf(line, "JMP @ %s", post_str))
+        else if (parse_label_arg(line, "JMP", post_str))
         {
             vector_push(vec, JMP);
             vector_push(vec, MAP_GET(int, labels, post_str));
         }
-        else if (sscanf(line, "JPS"))
+        else if (parse_lit(line, "JPS"))
         {
             vector_push(vec, JPS);
         }
-        else if (sscanf(line, "CMP"))
+        else if (parse_lit(line, "CMP"))
         {
             vector_push(vec, CMP);
         }
-        else if (sscanf(line, "JEQ %d", &post_int))
+        else if (parse_int_arg(line, "JEQ", &post_int))
         {
             vector_push(vec, JEQ);
             vector_push(vec, post_int);
@@ -132,68 +135,64 @@ vector *assemble_file(const char *file)
             vector_push(vec, JEQ);
             vector_push(vec, MAP_GET(int, labels, post_str));
         }
-        else if (sscanf(line, "JNE %d", &post_int))
+        else if (parse_int_arg(line, "JNE", &post_int))
         {
             vector_push(vec, JNE);
             vector_push(vec, post_int);
         }
-        else if (sscanf(line, "JNE @ %s", post_str))
+        else if (parse_label_arg(line, "JNE", post_str))
         {
             vector_push(vec, JNE);
             vector_push(vec, MAP_GET(int, labels, post_str));
         }
-        else if (sscanf(line, "JLT, %d", &post_int))
+        else if (parse_int_arg(line, "JLT", &post_int))
         {
             vector_push(vec, JLT);
             vector_push(vec, post_int);
         }
-        else if (sscanf(line, "JGT %d", &post_int))
+        else if (parse_int_arg(line, "JGT", &post_int))
         {
             vector_push(vec, JGT);
             vector_push(vec, post_int);
         }
-        else if (sscanf(line, "JGT @ %s", post_str))
+        else if (parse_label_arg(line, "JGT", post_str))
         {
             vector_push(vec, JGT);
             vector_push(vec, MAP_GET(int, labels, post_str));
         }
-        else if (sscanf(line, "INC"))
+        else if (parse_lit(line, "INC"))
         {
             vector_push(vec, INC);
         }
-        else if (sscanf(line, "DEC"))
+        else if (parse_lit(line, "DEC"))
         {
             vector_push(vec, DEC);
         }
-        else if (sscanf(line, "SWP"))
+        else if (parse_lit(line, "SWP"))
         {
             vector_push(vec, SWP);
         }
-        else if (sscanf(line, "RET"))
+        else if (parse_lit(line, "RET"))
         {
             vector_push(vec, RET);
         }
-        else if (sscanf(line, "DUP"))
+        else if (parse_lit(line, "DUP"))
         {
             vector_push(vec, DUP);
         }
-        else if (sscanf(line, "CAL %d", &post_int))
+        else if (parse_int_arg(line, "CAL", &post_int))
         {
             vector_push(vec, CAL);
             vector_push(vec, post_int);
         }
-        else if (sscanf(line, "CAL @ %s", post_str))
+        else if (parse_label_arg(line, "CAL", post_str))
         {
             vector_push(vec, CAL);
             vector_push(vec, MAP_GET(int, labels, post_str));
         }
-        else if (sscanf(line, "END"))
+        else if (parse_lit(line, "END"))
         {
             vector_push(vec, END);
-        }
-        else if (sscanf(line, ";"))
-        {
-            /* nothing */
         }
         else
         {
