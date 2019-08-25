@@ -20,15 +20,6 @@ This virtual machine is designed with the following ideas in mind:
 - stack-based
   - untyped stack, everything on the stack is a 32 bit integer, which can be a
     pointer to the heap, or just a value
-- local heap
-  - variables can be addressed by absolute values, greatly simplifying compiler
-    design
-  - heap can inherit from another heap, each function has it's own heap, each
-    inheriting from the "root" heap.
-- functional
-  - functions work like the JVM's `.class`es. 
-  - modules are made up of 1 or more functions
-  - dependencies are sub modules
 
 ### convenience > file size
 

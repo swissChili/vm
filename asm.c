@@ -3,23 +3,56 @@
 #include "asm.h"
 #include "colors.h"
 #include "bitcode.h"
+#include "map.h"
+#include "parse.h"
 
 
 vector *assemble_file(const char *file)
 {
     vector *vec = new_vector();
     FILE *fp = fopen(file, "r");
-    char line[256];
+    char line[512];
+
+    map *labels = new_map();
+
+    uint64_t instruction = 0;
+
+    while (fgets(line, sizeof(line), fp))
+    {
+        printf(line);
+        char lbl[256];
+        if (parse_label(line, lbl))
+        {
+            MAP_SET(labels, lbl, instruction);
+            printf(C_CYAN "is label '%s' at %d\n" C_RESET, lbl, instruction);
+        }
+        else if (!parse_skip(line))
+        {
+            instruction++;
+            puts(C_GREEN "Instruction++" C_RESET);
+        }
+    }
+
+    printf("\n\n\n\n");
+
+    fp = fopen(file, "r");
 
     while (fgets(line, sizeof(line), fp))
     {
         int post_int = 0;
         char post_char = 0;
+        char post_str[256];
+
+        printf("%s", line);
 
         if (sscanf(line, "PSH %d", &post_int))
         {
             vector_push(vec, PSH);
             vector_push(vec, post_int);
+        }
+        else if (parse_label(line, post_str))
+        {
+            printf("!!skipping\n");
         }
         else if (sscanf(line, "POP E%cX", &post_char))
         {
@@ -76,6 +109,11 @@ vector *assemble_file(const char *file)
             vector_push(vec, JMP);
             vector_push(vec, post_int);
         }
+        else if (sscanf(line, "JMP @ %s", post_str))
+        {
+            vector_push(vec, JMP);
+            vector_push(vec, MAP_GET(int, labels, post_str));
+        }
         else if (sscanf(line, "JPS"))
         {
             vector_push(vec, JPS);
@@ -89,10 +127,20 @@ vector *assemble_file(const char *file)
             vector_push(vec, JEQ);
             vector_push(vec, post_int);
         }
+        else if (sscanf(line, "JEQ @ %s", post_str))
+        {
+            vector_push(vec, JEQ);
+            vector_push(vec, MAP_GET(int, labels, post_str));
+        }
         else if (sscanf(line, "JNE %d", &post_int))
         {
             vector_push(vec, JNE);
             vector_push(vec, post_int);
+        }
+        else if (sscanf(line, "JNE @ %s", post_str))
+        {
+            vector_push(vec, JNE);
+            vector_push(vec, MAP_GET(int, labels, post_str));
         }
         else if (sscanf(line, "JLT, %d", &post_int))
         {
@@ -103,6 +151,11 @@ vector *assemble_file(const char *file)
         {
             vector_push(vec, JGT);
             vector_push(vec, post_int);
+        }
+        else if (sscanf(line, "JGT @ %s", post_str))
+        {
+            vector_push(vec, JGT);
+            vector_push(vec, MAP_GET(int, labels, post_str));
         }
         else if (sscanf(line, "INC"))
         {
@@ -129,6 +182,11 @@ vector *assemble_file(const char *file)
             vector_push(vec, CAL);
             vector_push(vec, post_int);
         }
+        else if (sscanf(line, "CAL @ %s", post_str))
+        {
+            vector_push(vec, CAL);
+            vector_push(vec, MAP_GET(int, labels, post_str));
+        }
         else if (sscanf(line, "END"))
         {
             vector_push(vec, END);
@@ -142,8 +200,6 @@ vector *assemble_file(const char *file)
             fprintf(stderr, "Unknown instruction %s\n", line);
             exit(1);
         }
-        post_char = 0;
-        post_int = 0;
     }
     return vec;
 }
